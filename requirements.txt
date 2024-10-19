@@ -1,4 +1,3 @@
-difflib
 fuzzywuzzy
 openai
 python-Levenshtein

@@ -1,6 +1,7 @@
 fuzzywuzzy
+gnureadline
 openai
 python-Levenshtein
-# readline # <-- some kind of error on pip install, but seems to be installed anyway?
+
 
 

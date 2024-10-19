@@ -1,5 +1,5 @@
 import os
-import readline
+import gnureadline as readline
 import logging
 import cmd
 import difflib

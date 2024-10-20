@@ -87,6 +87,11 @@ class Body:
             if start_processing:
                 body_lines.append(line)
 
+        # Dedent the body lines to remove any consistent indentation
+        if body_lines:
+            min_indent = min((len(line) - len(line.lstrip())) for line in body_lines if line.strip())
+            body_lines = [line[min_indent:] if line.strip() else line for line in body_lines]
+
         return "\n".join(body_lines)
 
     def __repr__(self):
@@ -109,7 +114,7 @@ class CodeBlock:
         Renders the code block with the head as a comment in the first line and body as the code.
         The output is enclosed in Markdown-style backticks with the appropriate code type.
         """
-        return f"```{self.head.code_type}\n{self.head.as_comment()}{repr(self.body)}\n```"
+        return f"```{self.head.code_type}\n{self.head.as_comment()}{self.body.code}\n```"
 
     @staticmethod
     def parse(code_block):

@@ -1,7 +1,5 @@
 ### short
 
-- fix base cli tests
-
 ### medium
 
 - dependency graph
@@ -9,6 +7,7 @@
 
 ### done
 
+- fix base cli tests
 - fix code block tests
 - fix assets tests
 - pass src root when initialising cli

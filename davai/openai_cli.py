@@ -34,8 +34,14 @@ def call_openai_api(request_text,
     return response.choices[0].message.content
 
 if __name__ == "__main__":
-    # Initialize the CLI with "OpenAI" prompt and call_openai_api function
-    cli = BaseCLI("OpenAI", call_openai_api)
+    # Check if a root directory is provided as a command line argument
+    if len(sys.argv) > 1:
+        root_dir = sys.argv[1]
+    else:
+        root_dir = "src"  # Default value if no argument is provided
+
+    # Initialize the CLI with "OpenAI" prompt, call_openai_api function, and root directory
+    cli = BaseCLI("OpenAI", call_openai_api, root=root_dir)
 
     # Start the command loop
     cli.cmdloop()

@@ -4,7 +4,7 @@ from davai.code_block import Head, Body, CodeBlock
 from davai.assets import Assets
 
 class Git:
-    def __init__(self, root = "src"):
+    def __init__(self, root):
         self.root = root
         self.assets = Assets()  # A list to hold CodeBlock objects
         self.commits = []  # List of commits (snapshots of assets)

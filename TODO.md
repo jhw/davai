@@ -1,14 +1,16 @@
 ### short
 
-- pass src root when initialising cli
-
-- fix failing tests
+- fix assets tests
+- fix code block tests
+- fix base cli tests
 
 ### medium
 
+- dependency graph
 - claude
 
 ### done
 
+- pass src root when initialising cli
 - fix readline
 

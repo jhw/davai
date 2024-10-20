@@ -11,11 +11,11 @@ from davai.responses import CodeResponse, BaseResponse
 class BaseCLI(cmd.Cmd):
     HISTORY_FILE = "tmp/cli_history.txt"
 
-    def __init__(self, prompt_name, transport_func):
+    def __init__(self, prompt_name, transport_func, root):
         super().__init__()
         self.prompt = f"{prompt_name} >>> "
         self.intro = f"Welcome to the {prompt_name} command line interface. Type help or ? to list commands."
-        self.git = Git()  # Git instance to handle asset management
+        self.git = Git(root)  # Git instance to handle asset management
         self.git.fetch()  # Load assets from the filesystem into memory
         self.asset_paths = set()  # Initialize the asset_paths set
         self.transport_func = transport_func  # Set the transport function

@@ -12,7 +12,7 @@ class BaseCliTest(unittest.TestCase):
         """Set up the CLI and test environment."""
         # Mock the transport function to return a static response
         self.mock_transport_func = MagicMock(return_value="Mock response")
-        self.cli = BaseCLI("TestCLI", self.mock_transport_func)
+        self.cli = BaseCLI("TestCLI", self.mock_transport_func, "tmp/src")
 
         # Mock Git instance methods to prevent actual file operations
         self.cli.git = MagicMock(spec=Git)

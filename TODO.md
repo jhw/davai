@@ -1,10 +1,10 @@
 ### short
 
-- pass src root when initialising cli
+- fix failing tests
 
 ### medium
 
-- tests 
+- pass src root when initialising cli
 - claude
 
 ### done

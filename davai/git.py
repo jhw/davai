@@ -4,11 +4,13 @@ from davai.code_block import Head, Body, CodeBlock
 from davai.assets import Assets
 
 class Git:
-    def __init__(self):
+    def __init__(self, root = "src"):
+        self.root = root
         self.assets = Assets()  # A list to hold CodeBlock objects
         self.commits = []  # List of commits (snapshots of assets)
         self.head = -1  # Index of the current commit (-1 means no commits yet)
         self.redo_stack = []  # Stack for redo operations
+
 
     def add_asset(self, filename, content):
         """Adds or updates an asset (file)."""
@@ -74,22 +76,22 @@ class Git:
         for asset in self.assets:
             logging.info(f"  {asset.head.path}: {repr(asset.body)}")
 
-    def fetch(self, root="src"):
+    def fetch(self):
         """Recursively fetches files from the root directory and adds them as assets."""
-        if os.path.exists(root):
-            for dirpath, _, filenames in os.walk(root):
+        if os.path.exists(self.root):
+            for dirpath, _, filenames in os.walk(self.root):
                 for filename in filenames:
                     filepath = os.path.join(dirpath, filename)
                     with open(filepath, 'r') as file:
                         content = file.read()
                         # Use absolute path with root for consistency
-                        relative_path = os.path.relpath(filepath, root)
-                        full_path = os.path.join(root, relative_path)
+                        relative_path = os.path.relpath(filepath, self.root)
+                        full_path = os.path.join(self.root, relative_path)
                         self.add_asset(full_path, content)
         else:
-            logging.info(f"Root directory '{root}' does not exist.")
+            logging.info(f"Root directory '{self.root}' does not exist.")
 
-    def push(self, root="src"):
+    def push(self):
         """Saves assets to the file system, creating directories if necessary.
         Only writes the file if it's new or if the contents have changed.
         """
@@ -98,11 +100,11 @@ class Git:
             content = asset.body.code
             
             # Ensure the filename is relative to the root
-            if not filename.startswith(root):
+            if not filename.startswith(self.root):
                 continue
             
-            relative_filename = os.path.relpath(filename, root)
-            filepath = os.path.join(root, relative_filename)
+            relative_filename = os.path.relpath(filename, self.root)
+            filepath = os.path.join(self.root, relative_filename)
             directory = os.path.dirname(filepath)
             
             # Check if the file exists and has the same content
@@ -121,12 +123,12 @@ class Git:
                 file.write(content)
                 logging.info(f"Written file: {filepath}")
 
-    def clean(self, root="src"):
+    def clean(self):
         """Removes assets from memory if the corresponding file doesn't exist on the filesystem."""
         to_remove = []
         for asset in self.assets:
             filename = asset.head.path
-            filepath = os.path.join(root, os.path.relpath(filename, root))
+            filepath = os.path.join(self.root, os.path.relpath(filename, self.root))
             if not os.path.exists(filepath):
                 to_remove.append(asset)
 
@@ -134,19 +136,19 @@ class Git:
             self.remove_asset(asset.head.path)
             logging.info(f"Purged asset: {asset.head.path}, as it doesn't exist in the filesystem.")
 
-    def prune(self, root="src"):
+    def prune(self):
         """Removes files from the root directory if they are not present in the in-memory assets."""
-        if os.path.exists(root):
-            for dirpath, _, filenames in os.walk(root):
+        if os.path.exists(self.root):
+            for dirpath, _, filenames in os.walk(self.root):
                 for filename in filenames:
                     filepath = os.path.join(dirpath, filename)
-                    relative_path = os.path.relpath(filepath, root)
-                    full_path = os.path.join(root, relative_path)
+                    relative_path = os.path.relpath(filepath, self.root)
+                    full_path = os.path.join(self.root, relative_path)
                     if full_path not in [asset.head.path for asset in self.assets]:
                         os.remove(filepath)  # Delete the file from the filesystem
                         logging.info(f"Deleted file: {filepath} (not found in assets)")
         else:
-            logging.info(f"Root directory '{root}' does not exist.")
+            logging.info(f"Root directory '{self.root}' does not exist.")
 
 if __name__ == "__main__":
     # Example usage:

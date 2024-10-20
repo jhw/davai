@@ -10,7 +10,7 @@ class GitTest(unittest.TestCase):
         """Create the necessary directories and set up the environment before each test."""
         if not os.path.exists(self.TMP_DIR):
             os.makedirs(self.TMP_DIR)
-        self.git = Git()
+        self.git = Git(self.TMP_DIR)
 
     def tearDown(self):
         """Clean up the environment after each test."""
@@ -28,7 +28,7 @@ class GitTest(unittest.TestCase):
 
     def test_add_asset(self):
         self.create_file("file1.txt", "Hello World!")
-        self.git.fetch(self.TMP_DIR)
+        self.git.fetch()
 
         # Assert that the asset was added correctly
         self.assertEqual(len(self.git.assets), 1)
@@ -37,11 +37,11 @@ class GitTest(unittest.TestCase):
 
     def test_update_asset(self):
         self.create_file("file1.txt", "Hello World!")
-        self.git.fetch(self.TMP_DIR)
+        self.git.fetch()
 
         # Update the content of the file
         self.create_file("file1.txt", "Updated Hello World!")
-        self.git.fetch(self.TMP_DIR)
+        self.git.fetch()
 
         # Assert that the asset was updated
         self.assertEqual(len(self.git.assets), 1)
@@ -49,7 +49,7 @@ class GitTest(unittest.TestCase):
 
     def test_remove_asset(self):
         self.create_file("file1.txt", "Hello World!")
-        self.git.fetch(self.TMP_DIR)
+        self.git.fetch()
         self.git.remove_asset(os.path.join(self.TMP_DIR, "file1.txt"))
 
         # Assert that the asset was removed
@@ -57,7 +57,7 @@ class GitTest(unittest.TestCase):
 
     def test_commit(self):
         self.create_file("file1.txt", "Hello World!")
-        self.git.fetch(self.TMP_DIR)
+        self.git.fetch()
         self.git.commit("Initial commit")
 
         # Assert that the commit was recorded
@@ -67,11 +67,11 @@ class GitTest(unittest.TestCase):
 
     def test_undo_redo(self):
         self.create_file("file1.txt", "Hello World!")
-        self.git.fetch(self.TMP_DIR)
+        self.git.fetch()
         self.git.commit("Initial commit")
 
         self.create_file("file2.txt", "Another file content")
-        self.git.fetch(self.TMP_DIR)
+        self.git.fetch()
         self.git.commit("Added file2.txt")
 
         self.git.undo()
@@ -87,7 +87,7 @@ class GitTest(unittest.TestCase):
     def test_fetch(self):
         self.create_file("file1.txt", "Hello World!")
         self.create_file("subdir/file2.txt", "Second file content")
-        self.git.fetch(self.TMP_DIR)
+        self.git.fetch()
 
         # Assert that both files were fetched
         self.assertEqual(len(self.git.assets), 2)
@@ -97,11 +97,11 @@ class GitTest(unittest.TestCase):
 
     def test_push(self):
         self.create_file("file1.txt", "Hello World!")
-        self.git.fetch(self.TMP_DIR)
+        self.git.fetch()
 
         # Change the content of file1.txt and push it
         self.git.assets[0].body.code = "Updated Hello World!"
-        self.git.push(self.TMP_DIR)
+        self.git.push()
 
         # Assert that the file system reflects the updated content
         with open(os.path.join(self.TMP_DIR, "file1.txt"), 'r') as file:
@@ -109,11 +109,11 @@ class GitTest(unittest.TestCase):
 
     def test_clean(self):
         self.create_file("file1.txt", "Hello World!")
-        self.git.fetch(self.TMP_DIR)
+        self.git.fetch()
 
         # Remove the file from the filesystem
         os.remove(os.path.join(self.TMP_DIR, "file1.txt"))
-        self.git.clean(self.TMP_DIR)
+        self.git.clean()
 
         # Assert that the asset was removed from memory
         self.assertEqual(len(self.git.assets), 0)
@@ -121,11 +121,11 @@ class GitTest(unittest.TestCase):
     def test_prune(self):
         self.create_file("file1.txt", "Hello World!")
         self.create_file("file2.txt", "Second file content")
-        self.git.fetch(self.TMP_DIR)
+        self.git.fetch()
 
         # Remove file2.txt from the assets manually
         self.git.remove_asset(os.path.join(self.TMP_DIR, "file2.txt"))
-        self.git.prune(self.TMP_DIR)
+        self.git.prune()
 
         # Assert that file2.txt was removed from the filesystem
         self.assertFalse(os.path.exists(os.path.join(self.TMP_DIR, "file2.txt")))

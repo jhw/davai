@@ -1,6 +1,5 @@
 ### short
 
-- fix code block tests
 - fix base cli tests
 
 ### medium
@@ -10,6 +9,7 @@
 
 ### done
 
+- fix code block tests
 - fix assets tests
 - pass src root when initialising cli
 - fix readline

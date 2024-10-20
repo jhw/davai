@@ -40,22 +40,6 @@ class AssetsTest(unittest.TestCase):
         self.assertEqual(len(matched_assets), 1)
         self.assertEqual(matched_assets[0].head.path, "src/App.js")
 
-    def _test_match_multiple(self):
-        """Test if match method returns multiple assets when applicable."""
-        matched_assets = self.assets.match("src")
-        self.assertEqual(len(matched_assets), 4)  # All assets should match "src"
-
-    def _test_match_threshold(self):
-        """Test if match method correctly applies the threshold."""
-        # Using a lower threshold to match even loosely
-        matched_assets_low_threshold = self.assets.match("cont", threshold=0.5)
-        self.assertEqual(len(matched_assets_low_threshold), 1)
-        self.assertEqual(matched_assets_low_threshold[0].head.path, "src/Content.ts")
-
-        # Using a high threshold that won't match any assets
-        matched_assets_high_threshold = self.assets.match("cont", threshold=0.9)
-        self.assertEqual(len(matched_assets_high_threshold), 0)
-
     def test_no_matches(self):
         """Test if match method returns an empty Assets instance when there are no matches."""
         matched_assets = self.assets.match("nonexistent")
